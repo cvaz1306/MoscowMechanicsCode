@@ -1,0 +1,36 @@
+<textarea id="code"></textarea>
+<button onclick="Convert()">Convert</button>
+<br>
+<textarea id="results"></textarea>
+<script>
+    var ph=0;
+    var results="";
+    var y=0;
+    function Convert(){
+        var x=document.getElementById("code").value;
+        for(i=0;i>x.length;i++){
+            if(parseInt(x.charAt(i))!=NaN&&ph==0&&y==0){
+                results+="movef(";
+                results+=x.charAt(i)
+            }
+            else{
+                if(parseInt(x.charAt(i))!=NaN&&ph==0){
+                    results+=x.charAt(i)
+                }
+                else{
+                    if(parseInt(x.charAt(i))!=NaN&&ph>0&&ph<3){
+                        results+=x.charAt(i);
+                        results+=", "
+                    }
+                    else{
+                        if(parseInt(x.charAt(i))!=NaN&&ph==3){
+                        results+=x.charAt(i);
+                        results+=", "
+                    }
+                    }
+                }
+            }
+
+        }
+    }
+</script>
