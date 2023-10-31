@@ -27,6 +27,8 @@ public abstract class RobotX extends LinearOpMode{
     public DcMotor frontright;
     public DcMotor randommotor;
     public DcMotor hookmotor;
+    public DcMotor armj1;
+    public DcMotor armj2;
 
     // todo: write your code here'
 
@@ -38,6 +40,9 @@ public abstract class RobotX extends LinearOpMode{
         backleft=hardwareMap.get(DcMotor.class, "back left");
         randommotor=hardwareMap.get(DcMotor.class, "random motor");
         hookmotor=hardwareMap.get(DcMotor.class, "hook");
+        armj1=hardwareMap.get(DcMotor.class, "arm j1");
+        armj2=hardwareMap.get(DcMotor.class, "arm j2");
+
         camservo = hardwareMap.get(CRServo.class, "cam servo");
 
         //set directions for motors
@@ -50,6 +55,9 @@ public abstract class RobotX extends LinearOpMode{
     }
     void moveRobot(){
         move((-(gamepad1.left_stick_x))*Math.abs((gamepad1.left_stick_x))*MainConfig.XSpeed, (gamepad1.left_stick_y)*Math.abs((gamepad1.left_stick_y))*MainConfig.YSpeed, -((gamepad1.right_stick_x))*2.6f);
+    }
+    void moveWithDirection(float x, float y, float rot){
+        move(x, y, rot);
     }
     private void move(double speedX, double speedY, float steeringAngle) {
         if (gamepad1.right_bumper) {
@@ -71,12 +79,14 @@ public abstract class RobotX extends LinearOpMode{
         Init();
         waitForStart();
         if (opModeIsActive()) {
+            Start();
             while (opModeIsActive()) {
                 Loop();
             }
         }
     }
     public abstract void initialise();
+    public abstract void Start();
     public abstract void Loop();
 
 

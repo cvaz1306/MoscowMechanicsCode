@@ -11,4 +11,6 @@ public class MainConfig {
     public static double LTTG2X=0;
     public static double DroneSpeed=10;
     public static double LiftPower=10;
+    public static double ArmJ1Power=1;
+    public static double ArmJ2Power=1;
 }
