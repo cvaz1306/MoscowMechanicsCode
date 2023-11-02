@@ -22,7 +22,15 @@ public class AutonomousV1 extends RobotX{
         Segment s1=new Segment(0,0,-2,270);
         Segment s2=new Segment(0,-4,0,260);
 
-        followSegmentArray(new Segment[]{
+
+
+
+
+
+
+
+
+      followSegmentArray(new Segment[]{
                 s0,
                 s1,
                 s2,
