@@ -15,7 +15,8 @@ public class MainOpMode extends RobotX{
 
 
     @Override public void Start(){
-
+        armj1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        armj2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
     // todo: write your code here
     @Override public void initialise(){
@@ -27,12 +28,6 @@ public class MainOpMode extends RobotX{
         isBraked=!isBraked;
 
 
-        if(isBraked){
-            backright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        }
-        else{
-            backright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        }
         if(gamepad2.right_bumper){
             randommotor.setPower(MainConfig.DroneSpeed);
         }
@@ -40,5 +35,11 @@ public class MainOpMode extends RobotX{
             randommotor.setPower(0);
         }
         if(gamepad2.a) armj1.setPower((gamepad2.right_trigger-gamepad2.left_trigger)*2*MainConfig.LiftPower);
+
+
+        armj1.setPower((gamepad2.left_stick_y)*3);
+
+        armj2.setPower((gamepad2.right_stick_y)*3);
+
     }
 }

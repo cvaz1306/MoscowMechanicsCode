@@ -13,6 +13,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class ArmTest extends RobotX{
 
     @Override public void Start(){
+        armj1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        armj2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
     }
     // todo: write your code here
@@ -20,11 +22,9 @@ public class ArmTest extends RobotX{
 
     }
     @Override public void Loop(){
-        if(gamepad1.a){
-            armj1.setPower((gamepad1.right_trigger-gamepad1.left_trigger)*3);
-        }
-        if(gamepad1.b){
-            armj2.setPower((gamepad1.right_trigger-gamepad1.left_trigger)*3);
-        }
+            armj1.setPower((gamepad2.left_stick_y)*MainConfig.ArmJ1Power);
+
+            armj2.setPower((gamepad2.right_stick_y)*MainConfig.ArmJ1Power);
+
     }
 }
