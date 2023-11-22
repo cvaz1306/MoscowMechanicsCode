@@ -24,6 +24,7 @@ public class MainOpMode extends RobotX{
     }
     @Override public void Loop(){
         if(! MainConfig.IsDrivingDisabled) super.moveRobot();
+
         super.hookmotor.setPower(gamepad2.right_trigger-gamepad2.left_trigger);
         isBraked=!isBraked;
 
@@ -34,12 +35,12 @@ public class MainOpMode extends RobotX{
         else{
             randommotor.setPower(0);
         }
-        if(gamepad2.a) armj1.setPower((gamepad2.right_trigger-gamepad2.left_trigger)*2*MainConfig.LiftPower);
 
+        if(!MainConfig.IsArmMovementDisabled) {
+            armj1.setPower((gamepad2.left_stick_y)*3);
 
-        armj1.setPower((gamepad2.left_stick_y)*3);
+            armj2.setPower((gamepad2.right_stick_y)*3);
 
-        armj2.setPower((gamepad2.right_stick_y)*3);
-
+        }
     }
 }

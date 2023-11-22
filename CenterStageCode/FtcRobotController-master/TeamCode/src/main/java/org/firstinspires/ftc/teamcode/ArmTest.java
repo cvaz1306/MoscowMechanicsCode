@@ -24,7 +24,7 @@ public class ArmTest extends RobotX{
     @Override public void Loop(){
             armj1.setPower((gamepad2.left_stick_y)*MainConfig.ArmJ1Power);
 
-            armj2.setPower((gamepad2.right_stick_y)*MainConfig.ArmJ1Power);
+            armj2.setPower((gamepad2.right_stick_y)*MainConfig.ArmJ2Power);
 
     }
 }
