@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.RobotX;
@@ -35,12 +36,9 @@ public class MainOpMode extends RobotX{
         else{
             randommotor.setPower(0);
         }
+        TelemetryPacket packet = new TelemetryPacket();
 
-        if(!MainConfig.IsArmMovementDisabled) {
-            armj1.setPower((gamepad2.left_stick_y)*3);
 
-            armj2.setPower((gamepad2.right_stick_y)*3);
-
-        }
+        dashboard.sendTelemetryPacket(packet);
     }
 }

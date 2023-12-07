@@ -1,4 +1,6 @@
 package org.firstinspires.ftc.teamcode;
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import java.io.OutputStreamWriter;
 import java.io.InputStreamReader;
@@ -15,11 +17,13 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.File;
+import java.util.Locale;
+
 import com.qualcomm.robotcore.hardware.CRServo;
 public abstract class RobotX extends LinearOpMode{
 
 
-
+    public FtcDashboard dashboard = FtcDashboard.getInstance();
     public  DcMotor backleft;
     public DcMotor backright;
     public CRServo camservo;
@@ -31,6 +35,8 @@ public abstract class RobotX extends LinearOpMode{
     public DcMotor armj2;
 
     // todo: write your code here'
+
+
 
     public void Init(){
         //init motors
@@ -88,6 +94,10 @@ public abstract class RobotX extends LinearOpMode{
     public abstract void initialise();
     public abstract void Start();
     public abstract void Loop();
-
-
+    public double getArm1Angle(){
+        return (((double)armj1.getCurrentPosition())/2)+ArmConfig.Arm1AngleOffset;
+    }
+    public double getArm2Angle(){
+        return (((double)armj2.getCurrentPosition())/2)+ArmConfig.Arm2AngleOffset;
+    }
 }
