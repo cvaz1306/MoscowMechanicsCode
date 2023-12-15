@@ -1,20 +1,14 @@
 package org.firstinspires.ftc.teamcode;
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import java.io.OutputStreamWriter;
-import java.io.InputStreamReader;
-import java.io.FileOutputStream;
-import java.io.FileInputStream;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.robotcore.external.android.AndroidAccelerometer;
-import org.firstinspires.ftc.robotcore.external.android.AndroidGyroscope;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.File;
+import org.firstinspires.ftc.teamcode.backend.Getter;
+import org.firstinspires.ftc.teamcode.backend.ExtObj;
+
+import java.util.ArrayList;
+
 import com.qualcomm.robotcore.hardware.CRServo;
 public abstract class RobotX extends LinearOpMode{
 
@@ -29,6 +23,13 @@ public abstract class RobotX extends LinearOpMode{
     public DcMotor hookmotor;
     public DcMotor armj1;
     public DcMotor armj2;
+
+    private int changes;
+
+    ArrayList<ExtObj> trackedDels = new ArrayList<ExtObj>();
+    ArrayList<ExtObj> trackedDels1 = new ArrayList<ExtObj>();
+
+    FtcDashboard dashboard = FtcDashboard.getInstance();
 
     // todo: write your code here'
 
@@ -81,13 +82,36 @@ public abstract class RobotX extends LinearOpMode{
         if (opModeIsActive()) {
             Start();
             while (opModeIsActive()) {
+
+
                 Loop();
+                changeTracker();
+                trackedDels.clear();
             }
         }
     }
     public abstract void initialise();
     public abstract void Start();
     public abstract void Loop();
+    void changeTracker(){
+        for (ExtObj e: trackedDels) {
 
+        }
+    }
+    void track(Getter delegate){
+        ExtObj extObj=new ExtObj() {
+            @Override
+            public String name() {
+                return delegate.name();
+            }
+
+            @Override
+            public Object value() {
+                return delegate.value();
+            }
+        };
+        trackedDels.add(extObj);
+
+    }
 
 }
