@@ -86,7 +86,7 @@ public abstract class RobotX extends LinearOpMode{
 
                 Loop();
                 changeTracker();
-                trackedDels.clear();
+                //trackedDels.clear();
             }
         }
     }
@@ -94,9 +94,16 @@ public abstract class RobotX extends LinearOpMode{
     public abstract void Start();
     public abstract void Loop();
     void changeTracker(){
+        int i=0;
         for (ExtObj e: trackedDels) {
+            try{ExtObj f = trackedDels1.get(i);}catch (Exception g){
 
+            }
+            i++;
         }
+        trackedDels1=new ArrayList<>(trackedDels);
+        trackedDels.clear();
+
     }
     void track(Getter delegate){
         ExtObj extObj=new ExtObj() {
