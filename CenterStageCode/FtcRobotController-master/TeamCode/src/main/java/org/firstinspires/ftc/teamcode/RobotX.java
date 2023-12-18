@@ -96,7 +96,13 @@ public abstract class RobotX extends LinearOpMode{
     void changeTracker(){
         int i=0;
         for (ExtObj e: trackedDels) {
-            try{ExtObj f = trackedDels1.get(i);}catch (Exception g){
+            ExtObj f = null;
+            try {
+                f = trackedDels1.get(i);
+                if (!e.equals(f)) {
+                    f.onChanged();
+                }
+            } catch (Exception g) {
 
             }
             i++;
@@ -105,7 +111,7 @@ public abstract class RobotX extends LinearOpMode{
         trackedDels.clear();
 
     }
-    void track(Getter delegate){
+    public void track(Getter delegate){
         ExtObj extObj=new ExtObj() {
             @Override
             public String name() {
@@ -115,6 +121,12 @@ public abstract class RobotX extends LinearOpMode{
             @Override
             public Object value() {
                 return delegate.value();
+            }
+
+            @Override
+            public boolean onChanged() {
+                delegate.onChanged(value());
+                return true;
             }
         };
         trackedDels.add(extObj);
