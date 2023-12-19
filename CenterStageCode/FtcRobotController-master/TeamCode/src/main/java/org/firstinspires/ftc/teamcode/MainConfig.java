@@ -5,7 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class MainConfig {
     public static boolean DoWeSave=true;
-    public static boolean IsDrivingDisabled=false;
+    public static boolean IsDrivingDisabled=true;
     public static boolean IsArmMovementDisabled=false;
     public static double XSpeed=5.f;
     public static double YSpeed=5.f;

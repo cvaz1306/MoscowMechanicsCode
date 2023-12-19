@@ -4,5 +4,6 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class MurderConfig {
-    public static double speed=1f,speed2=1f;
+    public static double speed=3f,speed2=1f;
+
 }

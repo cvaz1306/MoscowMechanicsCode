@@ -60,7 +60,7 @@ public abstract class RobotX extends LinearOpMode{
         initialise();
     }
     void moveRobot(){
-        move(-((-(gamepad1.left_stick_x))*Math.abs((gamepad1.left_stick_x))*MainConfig.XSpeed), (gamepad1.left_stick_y)*Math.abs((gamepad1.left_stick_y))*MainConfig.YSpeed, -((gamepad1.right_stick_x))*2.6f);
+        move(-((-(gamepad1.left_stick_x))*Math.abs((gamepad1.left_stick_x))*MainConfig.XSpeed), (gamepad1.left_stick_y)*Math.abs((gamepad1.left_stick_y))*MainConfig.YSpeed, ((gamepad1.right_stick_x))*2.6f);
     }
     void moveWithDirection(float x, float y, float rot){
         move(x, y, rot);

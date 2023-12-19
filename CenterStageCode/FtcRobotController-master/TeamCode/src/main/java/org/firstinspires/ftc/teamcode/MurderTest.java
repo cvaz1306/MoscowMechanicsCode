@@ -24,14 +24,13 @@ public class MurderTest extends RobotX{
     @Override
     public void Loop() {
         if(! MainConfig.IsDrivingDisabled) super.moveRobot();
-        super.hookmotor.setPower(gamepad2.right_stick_y);
-
-
+        //
+        // super.hookmotor.setPower(gamepad2.right_stick_y);
 
         if(gamepad2.right_bumper){
             randommotor.setPower(MainConfig.DroneSpeed);
         }
-        else{
+         else{
             randommotor.setPower(0);
         }
         TelemetryPacket packet = new TelemetryPacket();
