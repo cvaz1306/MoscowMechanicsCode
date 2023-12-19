@@ -1,29 +1,19 @@
 package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import java.io.OutputStreamWriter;
-import java.io.InputStreamReader;
-import java.io.FileOutputStream;
-import java.io.FileInputStream;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.robotcore.external.android.AndroidAccelerometer;
-import org.firstinspires.ftc.robotcore.external.android.AndroidGyroscope;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.File;
-import java.util.Locale;
+import org.firstinspires.ftc.teamcode.backend.Getter;
+import org.firstinspires.ftc.teamcode.backend.ExtObj;
+
+import java.util.ArrayList;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 public abstract class RobotX extends LinearOpMode{
 
 
-    public FtcDashboard dashboard = FtcDashboard.getInstance();
+
     public  DcMotor backleft;
     public DcMotor backright;
     public CRServo camservo;
@@ -34,9 +24,14 @@ public abstract class RobotX extends LinearOpMode{
     public DcMotor armj1;
     public DcMotor armj2;
 
+    private int changes;
+
+    ArrayList<ExtObj> trackedDels = new ArrayList<ExtObj>();
+    ArrayList<ExtObj> trackedDels1 = new ArrayList<ExtObj>();
+
+    FtcDashboard dashboard = FtcDashboard.getInstance();
+
     // todo: write your code here'
-
-
 
     public void Init(){
         //init motors
@@ -60,7 +55,7 @@ public abstract class RobotX extends LinearOpMode{
         initialise();
     }
     void moveRobot(){
-        move(-((-(gamepad1.left_stick_x))*Math.abs((gamepad1.left_stick_x))*MainConfig.XSpeed), (gamepad1.left_stick_y)*Math.abs((gamepad1.left_stick_y))*MainConfig.YSpeed, ((gamepad1.right_stick_x))*2.6f);
+        move(-((-(gamepad1.left_stick_x))*Math.abs((gamepad1.left_stick_x))*MainConfig.XSpeed), (gamepad1.left_stick_y)*Math.abs((gamepad1.left_stick_y))*MainConfig.YSpeed, -((gamepad1.right_stick_x))*2.6f);
     }
     void moveWithDirection(float x, float y, float rot){
         move(x, y, rot);
@@ -87,17 +82,55 @@ public abstract class RobotX extends LinearOpMode{
         if (opModeIsActive()) {
             Start();
             while (opModeIsActive()) {
+
+
                 Loop();
+                changeTracker();
+                //trackedDels.clear();
             }
         }
     }
     public abstract void initialise();
     public abstract void Start();
     public abstract void Loop();
-    public double getArm1Angle(){
-        return (((double)armj1.getCurrentPosition())/2)+ArmConfig.Arm1AngleOffset;
+    void changeTracker(){
+        int i=0;
+        for (ExtObj e: trackedDels) {
+            ExtObj f = null;
+            try {
+                f = trackedDels1.get(i);
+                if (!e.equals(f)) {
+                    f.onChanged();
+                }
+            } catch (Exception g) {
+
+            }
+            i++;
+        }
+        trackedDels1=new ArrayList<>(trackedDels);
+        trackedDels.clear();
+
     }
-    public double getArm2Angle(){
-        return (((double)armj2.getCurrentPosition())/2)+ArmConfig.Arm2AngleOffset;
+    public void track(Getter delegate){
+        ExtObj extObj=new ExtObj() {
+            @Override
+            public String name() {
+                return delegate.name();
+            }
+
+            @Override
+            public Object value() {
+                return delegate.value();
+            }
+
+            @Override
+            public boolean onChanged() {
+                delegate.onChanged(value());
+                return true;
+            }
+        };
+        trackedDels.add(extObj);
+
     }
+
 }

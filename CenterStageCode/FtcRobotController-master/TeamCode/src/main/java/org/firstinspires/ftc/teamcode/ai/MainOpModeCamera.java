@@ -1,3 +1,5 @@
+package org.firstinspires.ftc.teamcode.ai;
+
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.ImageFormat;
