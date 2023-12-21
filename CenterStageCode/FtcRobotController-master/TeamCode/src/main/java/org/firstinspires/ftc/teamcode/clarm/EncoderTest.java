@@ -1,13 +1,17 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.clarm;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.ArmConfig;
+import org.firstinspires.ftc.teamcode.CustomGeometry;
+import org.firstinspires.ftc.teamcode.RobotX;
+
 import java.util.Locale;
 
 @TeleOp(name="Encoder test")
-public class EncoderTest extends RobotX{
+public class EncoderTest extends RobotX {
     public double ArmS1Power=0,ArmS2Power=0;
     @Override
     public void initialise() {
@@ -32,7 +36,7 @@ public class EncoderTest extends RobotX{
         double arm1AngleRad=Math.toRadians(getArm1Angle());
         double arm2AngleRad=Math.toRadians(getArm2Angle());
 
-        double x=Math.cos(arm1AngleRad)*ArmConfig.Segment1Length*1;
+        double x=Math.cos(arm1AngleRad)* ArmConfig.Segment1Length*1;
         double y=Math.sin(arm1AngleRad)*ArmConfig.Segment1Length*1;
         double x1=Math.cos(arm2AngleRad)*ArmConfig.Segment2Length*1;
         double y1=Math.sin(arm2AngleRad)*ArmConfig.Segment2Length*1;
@@ -77,7 +81,7 @@ public class EncoderTest extends RobotX{
             armj2.setPower(0);
             ArmS2Power=0;
         }
-        ArmS1Power=CustomGeometry.clamp(ArmS1Power,1f,-1f);
+        ArmS1Power= CustomGeometry.clamp(ArmS1Power,1f,-1f);
         ArmS2Power=CustomGeometry.clamp(ArmS2Power,1f,-1f);
     }
 }

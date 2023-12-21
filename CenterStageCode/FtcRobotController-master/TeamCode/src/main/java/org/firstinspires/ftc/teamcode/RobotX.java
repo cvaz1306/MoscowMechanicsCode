@@ -101,6 +101,7 @@ public abstract class RobotX extends LinearOpMode{
                 f = trackedDels1.get(i);
                 if (!e.equals(f)) {
                     f.onChanged();
+
                 }
             } catch (Exception g) {
 
@@ -132,5 +133,10 @@ public abstract class RobotX extends LinearOpMode{
         trackedDels.add(extObj);
 
     }
-
+    public double getArm1Angle(){
+        return armj1.getCurrentPosition();
+    }
+    public double getArm2Angle(){
+        return armj2.getCurrentPosition();
+    }
 }

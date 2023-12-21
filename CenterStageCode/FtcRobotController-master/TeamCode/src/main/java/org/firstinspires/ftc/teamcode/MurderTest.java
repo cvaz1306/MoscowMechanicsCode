@@ -43,12 +43,16 @@ public class MurderTest extends RobotX{
         packet.put("Back Left", backleft.getPower());
         packet.put("Front Right", frontright.getPower());
         packet.put("Back Right", backright.getPower());
+        double x=Math.abs(frontleft.getPower());
+        double y=Math.abs(backleft.getPower());
+        double z=Math.abs(frontright.getPower());
+        double t=Math.abs(backright.getPower());
         packet.fieldOverlay()
                         .setFill("rgb(255,255,255")
-                                .fillCircle(12.5,0,5)
-                                        .fillCircle(-12.5,0,5)
-                                                .fillCircle(-12.5,15,5)
-                                                    .fillCircle(12.5,15,5)
+                                .fillCircle(12.5,0,x)
+                                        .fillCircle(-12.5,0,y)
+                                                .fillCircle(-12.5,15,z)
+                                                    .fillCircle(12.5,15,t)
                                                             .setFill("rgb(100,100,100)")
                                                                     .fillRect(-12.f,15,25,15);
 
