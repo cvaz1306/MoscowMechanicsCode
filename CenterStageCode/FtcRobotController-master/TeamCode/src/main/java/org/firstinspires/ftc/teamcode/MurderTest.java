@@ -2,12 +2,10 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.RobotX;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Configs.MainConfig;
+import org.firstinspires.ftc.teamcode.Configs.MurderConfig;
+
 @TeleOp(name="Murder Test")
 public class MurderTest extends RobotX{
 
@@ -34,7 +32,7 @@ public class MurderTest extends RobotX{
             randommotor.setPower(0);
         }
         TelemetryPacket packet = new TelemetryPacket();
-        armj1.setPower(gamepad2.right_stick_y*MurderConfig.speed);
+        armj1.setPower(gamepad2.right_stick_y* MurderConfig.speed);
         armj2.setPower(gamepad2.right_stick_y*MurderConfig.speed*MurderConfig.speed2);
         packet.put("Arm Power",gamepad2.left_trigger-gamepad2.right_trigger*MurderConfig.speed);
 

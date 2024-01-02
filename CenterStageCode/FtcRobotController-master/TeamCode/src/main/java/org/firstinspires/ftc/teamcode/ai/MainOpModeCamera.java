@@ -9,13 +9,11 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.android.util.Size;
 import org.firstinspires.ftc.robotcore.external.function.Consumer;
 import org.firstinspires.ftc.robotcore.external.function.Continuation;
@@ -33,12 +31,12 @@ import org.firstinspires.ftc.robotcore.internal.network.CallbackLooper;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.firstinspires.ftc.robotcore.internal.system.ContinuationSynchronizer;
 import org.firstinspires.ftc.robotcore.internal.system.Deadline;
-import org.firstinspires.ftc.teamcode.CameraConfigGreen;
-import org.firstinspires.ftc.teamcode.CameraConfigPurple;
-import org.firstinspires.ftc.teamcode.CameraConfigWhite;
-import org.firstinspires.ftc.teamcode.CameraConfigYellow;
+import org.firstinspires.ftc.teamcode.Configs.CameraConfigGreen;
+import org.firstinspires.ftc.teamcode.Configs.CameraConfigPurple;
+import org.firstinspires.ftc.teamcode.Configs.CameraConfigWhite;
+import org.firstinspires.ftc.teamcode.Configs.CameraConfigYellow;
 import org.firstinspires.ftc.teamcode.ColorConverter;
-import org.firstinspires.ftc.teamcode.MainConfig;
+import org.firstinspires.ftc.teamcode.Configs.MainConfig;
 
 import java.io.File;
 import java.io.FileOutputStream;

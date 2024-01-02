@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.teamcode.Configs.MainConfig;
 import org.firstinspires.ftc.teamcode.backend.Getter;
 import org.firstinspires.ftc.teamcode.backend.ExtObj;
 
@@ -29,7 +30,7 @@ public abstract class RobotX extends LinearOpMode{
     ArrayList<ExtObj> trackedDels = new ArrayList<ExtObj>();
     ArrayList<ExtObj> trackedDels1 = new ArrayList<ExtObj>();
 
-    FtcDashboard dashboard = FtcDashboard.getInstance();
+    public FtcDashboard dashboard = FtcDashboard.getInstance();
 
     // todo: write your code here'
 
@@ -55,7 +56,7 @@ public abstract class RobotX extends LinearOpMode{
         initialise();
     }
     void moveRobot(){
-        move(-((-(gamepad1.left_stick_x))*Math.abs((gamepad1.left_stick_x))*MainConfig.XSpeed), (gamepad1.left_stick_y)*Math.abs((gamepad1.left_stick_y))*MainConfig.YSpeed, -((gamepad1.right_stick_x))*2.6f);
+        move(-((-(gamepad1.left_stick_x))*Math.abs((gamepad1.left_stick_x))* MainConfig.XSpeed), (gamepad1.left_stick_y)*Math.abs((gamepad1.left_stick_y))*MainConfig.YSpeed, -((gamepad1.right_stick_x))*2.6f);
     }
     void moveWithDirection(float x, float y, float rot){
         move(x, y, rot);

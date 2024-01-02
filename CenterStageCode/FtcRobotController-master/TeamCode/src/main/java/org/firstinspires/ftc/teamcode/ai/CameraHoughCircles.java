@@ -7,13 +7,11 @@ import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 //import org.firstinspires.ftc.robotcore.external.android.util.Size;
 import org.firstinspires.ftc.robotcore.external.function.Consumer;
 import org.firstinspires.ftc.robotcore.external.function.Continuation;
@@ -31,16 +29,16 @@ import org.firstinspires.ftc.robotcore.internal.network.CallbackLooper;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.firstinspires.ftc.robotcore.internal.system.ContinuationSynchronizer;
 import org.firstinspires.ftc.robotcore.internal.system.Deadline;
-import org.firstinspires.ftc.teamcode.MainConfig;
+import org.firstinspires.ftc.teamcode.Configs.CameraConfig;
+import org.firstinspires.ftc.teamcode.Configs.MainConfig;
 import org.opencv.android.Utils;
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-import org.opencv.core.MatOfFloat;
-import org.opencv.core.MatOfInt;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvWebcam;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -73,7 +71,9 @@ public class CameraHoughCircles extends LinearOpMode {
 
         initializeFrameQueue(2);
         AppUtil.getInstance().ensureDirectoryExists(captureDirectory);
-
+        int camId=hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewid","id",hardwareMap.appContext.getPackageName());
+        OpenCvWebcam cam= OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class,"Webcam 1"),camId);
+        dashboard.startCameraStream(cam,60);
         try {
             openCamera();
             if (camera == null) return;
@@ -101,6 +101,7 @@ public class CameraHoughCircles extends LinearOpMode {
                     Bitmap bmp = frameQueue.poll();
                     if (bmp != null) {
                         captureWhenAvailable = false;
+                        dashboard.sendImage(bmp);
                         onNewFrame(bmp);
                     }
                 }
@@ -132,10 +133,10 @@ public class CameraHoughCircles extends LinearOpMode {
                 Imgproc.HOUGH_GRADIENT,
                 1,  // dp
                 20, // minDist
-                100, // param1
-                30, // param2 (adjust based on your image characteristics)
-                5, // minRadius
-                30  // maxRadius
+                CameraConfig.param1, // param1
+                CameraConfig.param2, // param2 (adjust based on your image characteristics)
+                (int)CameraConfig.minSize, // minRadius
+                (int)CameraConfig.maxSize  // maxRadius
         );
 
         // Draw detected circles on the original image
@@ -150,23 +151,24 @@ public class CameraHoughCircles extends LinearOpMode {
                 Imgproc.circle(matImage, center, radius, new Scalar(0, 255, 0), 3);
             }
         }
-
+        Imgproc.cvtColor(circles, circles, Imgproc.COLOR_GRAY2BGR);
         // Convert Mat back to Bitmap
         Utils.matToBitmap(matImage, frame);
-
+        Bitmap x= Bitmap.createBitmap(frame.getWidth(), frame.getHeight(), Bitmap.Config.ARGB_4444);
         // Display additional information or perform further processing if needed
-
+        //Utils.matToBitmap(circles,x);
         // Save the processed frame (optional)
-        if (MainConfig.DoWeSave) saveBitmap(frame);
+        if (MainConfig.DoWeSave){ saveBitmap(frame);}//saveBitmap(x,"circles.jpg");}
 
         // Recycle the frame (important to avoid memory leaks)
-        frame.recycle();
+
 
         // Update telemetry or send data to FTC Dashboard
         TelemetryPacket packet = new TelemetryPacket();
         // Add telemetry data as needed
-        dashboard.sendImage(frame);
+
         dashboard.sendTelemetryPacket(packet);
+        frame.recycle();
     }
 
     private void initializeFrameQueue(int capacity) {
@@ -289,6 +291,18 @@ public class CameraHoughCircles extends LinearOpMode {
             }
         } catch (IOException e) {
             RobotLog.ee(TAG, e, "exception in saveBitmap()");
+            error("exception saving %s", file.getName());
+        }
+    }
+    private void saveBitmap(Bitmap bitmap, String name) {
+        File file = new File(captureDirectory, String.format(Locale.getDefault(), name, captureCounter++));
+        try {
+            try (FileOutputStream outputStream = new FileOutputStream(file)) {
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                //telemetry.log().add("captured %s", file.getName());
+            }
+        } catch (IOException e) {
+            RobotLog.ee(TAG, e, "exception in saveBitmap() with name");
             error("exception saving %s", file.getName());
         }
     }

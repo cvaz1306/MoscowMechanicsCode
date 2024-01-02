@@ -1,14 +1,11 @@
 package org.firstinspires.ftc.teamcode.clarm;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.ArmConfig;
+import org.firstinspires.ftc.teamcode.Configs.ArmConfig;
 import org.firstinspires.ftc.teamcode.CustomGeometry;
 import org.firstinspires.ftc.teamcode.RobotX;
-
-import java.util.Locale;
 
 @TeleOp(name="Encoder test")
 public class EncoderTest extends RobotX {
@@ -64,7 +61,7 @@ public class EncoderTest extends RobotX {
             armj1.setPower(0);
             ArmS1Power=0;
         }
-        if(Math.abs(ArmConfig.targetPosition-getArm2Angle())<ArmConfig.ArmS2Accuracy){
+        if(Math.abs(ArmConfig.targetPosition2   -getArm2Angle())<ArmConfig.ArmS2Accuracy){
             ArmS2Power=0;
             packet.addLine("Resetting");
         }
