@@ -5,12 +5,15 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.Configs.MainConfig;
+import org.firstinspires.ftc.teamcode.Configs.MurderConfig;
 import org.firstinspires.ftc.teamcode.backend.Getter;
 import org.firstinspires.ftc.teamcode.backend.ExtObj;
 
 import java.util.ArrayList;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.Servo;
+
 public abstract class RobotX extends LinearOpMode{
 
 
@@ -18,6 +21,7 @@ public abstract class RobotX extends LinearOpMode{
     public  DcMotor backleft;
     public DcMotor backright;
     public CRServo camservo;
+    public Servo claw;
     public DcMotor frontleft;
     public DcMotor frontright;
     public DcMotor randommotor;
@@ -46,7 +50,7 @@ public abstract class RobotX extends LinearOpMode{
         armj2=hardwareMap.get(DcMotor.class, "arm j2");
 
         camservo = hardwareMap.get(CRServo.class, "cam servo");
-
+        claw=hardwareMap.get(Servo.class,"claw");
         //set directions for motors
         frontleft.setDirection(DcMotorSimple.Direction.REVERSE);
         backleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -56,7 +60,7 @@ public abstract class RobotX extends LinearOpMode{
         initialise();
     }
     void moveRobot(){
-        move(-((-(gamepad1.left_stick_x))*Math.abs((gamepad1.left_stick_x))* MainConfig.XSpeed), (gamepad1.left_stick_y)*Math.abs((gamepad1.left_stick_y))*MainConfig.YSpeed, -((gamepad1.right_stick_x))*2.6f);
+        move(-((-(gamepad1.left_stick_x))*Math.abs((gamepad1.left_stick_x))* MainConfig.XSpeed), (gamepad1.left_stick_y)*Math.abs((gamepad1.left_stick_y))*MainConfig.YSpeed, (float)MurderConfig.Steeringanglemultiplier*(gamepad1.right_stick_x));
     }
     void moveWithDirection(float x, float y, float rot){
         move(x, y, rot);
