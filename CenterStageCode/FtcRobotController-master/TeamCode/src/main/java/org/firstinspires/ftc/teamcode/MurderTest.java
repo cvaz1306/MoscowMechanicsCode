@@ -5,13 +5,16 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Configs.MainConfig;
 import org.firstinspires.ftc.teamcode.Configs.MurderConfig;
+import org.firstinspires.ftc.teamcode.Configs.ViperArmConfig;
 
 @TeleOp(name="Murder Test")
 public class MurderTest extends RobotX{
 
+    int armj1Offset=0,armj2Offset=0;
     @Override
     public void initialise() {
-
+        armj1Offset=-ViperArmConfig.armj1offset;
+        armj2Offset=armj2.getCurrentPosition();
     }
 
     @Override
@@ -55,7 +58,18 @@ public class MurderTest extends RobotX{
                                                                     .fillRect(-12.f,15,25,15);
 
 
+
+        packet.put("Claw Position",claw.getPosition());
+        packet.put("armj1",armj1.getCurrentPosition());
+        packet.put("armj2",-armj2.getCurrentPosition());
+//        if(gamepad2.a){
+//            claw.setPosition(ViperArmConfig.clawOpenPosition);
+//        }
+//        else claw.setPosition(ViperArmConfig.clawClosedPosition);
+
+//        if(gamepad2.b) armj3.setPosition(ViperArmConfig.armj3TargetPosition);
         dashboard.sendTelemetryPacket(packet);
+
     }
 
 

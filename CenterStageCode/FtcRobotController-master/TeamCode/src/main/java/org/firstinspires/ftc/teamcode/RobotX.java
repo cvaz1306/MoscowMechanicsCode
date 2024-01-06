@@ -28,6 +28,8 @@ public abstract class RobotX extends LinearOpMode{
     public DcMotor hookmotor;
     public DcMotor armj1;
     public DcMotor armj2;
+    public Servo armj3;
+
 
     private int changes;
 
@@ -44,11 +46,11 @@ public abstract class RobotX extends LinearOpMode{
         backright=hardwareMap.get(DcMotor.class, "back right");
         frontleft=hardwareMap.get(DcMotor.class, "front left");
         backleft=hardwareMap.get(DcMotor.class, "back left");
-        randommotor=hardwareMap.get(DcMotor.class, "random motor");
+        randommotor=hardwareMap.get(DcMotor.class, "notso motor");
         hookmotor=hardwareMap.get(DcMotor.class, "hook");
         armj1=hardwareMap.get(DcMotor.class, "arm j1");
         armj2=hardwareMap.get(DcMotor.class, "arm j2");
-
+        armj3=hardwareMap.get(Servo.class,"armj3");
         camservo = hardwareMap.get(CRServo.class, "cam servo");
         claw=hardwareMap.get(Servo.class,"claw");
         //set directions for motors
@@ -59,7 +61,7 @@ public abstract class RobotX extends LinearOpMode{
         frontright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         initialise();
     }
-    void moveRobot(){
+    public void moveRobot(){
         move(-((-(gamepad1.left_stick_x))*Math.abs((gamepad1.left_stick_x))* MainConfig.XSpeed), (gamepad1.left_stick_y)*Math.abs((gamepad1.left_stick_y))*MainConfig.YSpeed, (float)MurderConfig.Steeringanglemultiplier*(gamepad1.right_stick_x));
     }
     void moveWithDirection(float x, float y, float rot){

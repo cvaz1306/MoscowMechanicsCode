@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag and Drop List</title>
+    <style>
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            width: 200px;
+        }
+
+        li {
+            padding: 10px;
+            margin: 5px;
+            background-color: #f0f0f0;
+            cursor: grab;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Drag and Drop List</h2>
+    
+    <ul id="draggable-list" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <li draggable="true" ondragstart="drag(event)">Item 1</li>
+        <li draggable="true" ondragstart="drag(event)">Item 2</li>
+        <li draggable="true" ondragstart="drag(event)">Item 3</li>
+        <!-- Add more items as needed -->
+    </ul>
+
+    <script>
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function drag(event) {
+            event.dataTransfer.setData("text", event.target.innerHTML);
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            var data = event.dataTransfer.getData("text");
+            var draggedItem = document.createElement("li");
+            draggedItem.innerHTML = data;
+            draggedItem.draggable = true;
+            draggedItem.ondragstart = function (e) { drag(e); };
+            draggedItem.ondragover = function (e) { allowDrop(e); };
+            draggedItem.ondrop = function (e) { drop(e); };
+
+            event.target.appendChild(draggedItem);
+        }
+    </script>
+
+</body>
+</html>

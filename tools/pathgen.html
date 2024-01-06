@@ -1,0 +1,313 @@
+<html>
+
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #segments-container {
+            max-width: 800px;
+            margin: 20px auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .segment {
+            border: 1px solid #ddd;
+            padding: 8px;
+            margin-bottom: 5px;
+            background-color: #fff;
+            cursor: move;
+            transition: background-color 0.3s ease-in-out;
+            width: 400px;
+        }
+
+        .segment:hover {
+            background-color: #f0f0f0;
+        }
+
+        #code {
+            white-space: pre-wrap;
+            background-color: #fff;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        #inputs-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        input {
+            margin: 5px;
+            padding: 8px;
+            width: 100px;
+        }
+
+        button {
+            margin: 5px;
+            padding: 8px 15px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #segments-list {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        #copy-button {
+            margin-top: 10px;
+        }
+
+        .dragged-segment {
+            position: absolute;
+            border: 1px solid #ddd;
+            padding: 8px;
+            background-color: #fff;
+            cursor: move;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .drop-placeholder {
+            border: 2px dashed #4caf50;
+            margin-top: 5px;
+            height: 36px;
+            width: 100%;
+            box-sizing: border-box;
+            pointer-events: none;
+        }
+        img{
+            display: none;
+            width: 200px;
+            height: 20px;
+        }
+        .highlight img{
+            display: inherit;
+        }
+        
+    </style>
+    <link href =
+    "https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" 
+          rel = "stylesheet"> 
+    <script src = 
+    "https://code.jquery.com/jquery-1.10.2.js">
+    </script>
+    <script src = 
+    "https://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+</head>
+
+<body>
+
+    <div id="segments-container">
+        <div id="inputs-container">
+            <input type="text" id="x" placeholder="X">
+            <input type="text" id="y" placeholder="Y">
+            <input type="text" id="rot" placeholder="Rotation">
+            <input type="text" id="time" placeholder="Time">
+            <button onclick="add()">Add</button>
+            <button onclick="clearSegments()">Clear</button>
+            <button onclick="copyCode()" id="copy-button">Copy Code</button>
+        </div>
+
+        <code id="code">
+            followSegmentArray(new Segment[]{
+                new Segment(0, 4, 0, 100)
+            });
+        </code>
+
+        <div id="segments-list" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <!-- Segments will be dynamically added here -->
+        </div>
+
+        <div id="dragged-segment" class="dragged-segment"></div>
+        <div id="drop-placeholder" class="drop-placeholder"></div>
+    </div>
+
+    <script>
+        var x = document.getElementById("x");
+        var y = document.getElementById("y");
+        var rot = document.getElementById("rot");
+        var time = document.getElementById("time");
+        var segments = [];
+        var codeElement = document.getElementById("code");
+        var segmentsList = document.getElementById("segments-list");
+        var draggedSegment = document.getElementById("dragged-segment");
+        var dropPlaceholder = document.getElementById("drop-placeholder");
+
+        function add() {
+            var segment = {
+                x: x.value + "f",
+                y: y.value + "f",
+                rotation: rot.value + "f",
+                time: time.value
+            };
+
+            segments.push(segment);
+            updateSegmentsList();
+            updateCode();
+            clearInputFields();
+        }
+
+        function clearSegments() {
+            segments = [];
+            updateSegmentsList();
+            updateCode();
+        }
+
+        function updateSegmentsList() {
+            segmentsList.innerHTML = "";
+            segments.forEach(function (segment, index) {
+                var segmentDiv = document.createElement("div");
+                segmentDiv.className = "segment";
+                segmentDiv.setAttribute("draggable", true);
+                segmentDiv.setAttribute("data-index", index);
+                segmentDiv.addEventListener("dragstart", function (e) {
+                    dragStart(e);
+                });
+                segmentDiv.addEventListener("dragover", function (e) {
+                    dragOver(e);
+                });
+                segmentDiv.addEventListener("drop", function (e) {
+                    drop(e);
+                });
+
+                segmentDiv.innerText = `X: ${segment.x}, Y: ${segment.y}, Rotation: ${segment.rotation}, Time: ${segment.time}`;
+                segmentsList.appendChild(segmentDiv)
+                let i=document.createElement("img");
+                i.src="placeholder.png";
+                segmentDiv.appendChild(i);
+            });
+        }
+
+        function updateCode() {
+            var code = "followSegmentArray(new Segment[]{";
+            segments.forEach(function (segment, index) {
+                code += `\n    new Segment(${segment.x}, ${segment.y}, ${segment.rotation}, ${segment.time})`;
+                if (index < segments.length - 1) {
+                    code += ",";
+                }
+            });
+            code += "\n});";
+            codeElement.innerText = code;
+        }
+
+        function clearInputFields() {
+            x.value = "";
+            y.value = "";
+            rot.value = "";
+            time.value = "";
+        }
+
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function dragStart(event) {
+            event.dataTransfer.setData("text/plain", event.target.dataset.index);
+        }
+
+        function dragOver(event) {
+            event.preventDefault();
+            var draggingIndex = parseInt(event.dataTransfer.getData("text/plain"));
+            var targetIndex = parseInt(event.target.dataset.index);
+
+            // Highlight the area between segments
+            if (targetIndex !== draggingIndex) {
+                event.target.classList.add("highlight");
+
+                // Calculate drop position
+                var rect = event.target.getBoundingClientRect();
+                var dropPosition = (event.clientY - rect.top) / (rect.bottom - rect.top);
+                //showDropPlaceholder(targetIndex, dropPosition);
+            }
+            else{
+                event.target.classList.remove("highlight");
+            }
+        }
+
+        function showDropPlaceholder(targetIndex, dropPosition) {
+            var segments = document.querySelectorAll('.segment');
+            var totalSegments = segments.length;
+
+            if (totalSegments === 0) {
+                dropPlaceholder.style.top = '0';
+            } else if (targetIndex === totalSegments) {
+                dropPlaceholder.style.top = `${dropPosition * 100}%`;
+            } else {
+                var targetSegment = segments[targetIndex];
+                var topOffset = dropPosition > 0.5 ? targetSegment.offsetHeight : 0;
+                dropPlaceholder.style.top = `${targetSegment.offsetTop + topOffset}px`;
+            }
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            var draggingIndex = parseInt(event.dataTransfer.getData("text/plain"));
+            var targetIndex = parseInt(event.target.dataset.index);
+
+            // Remove highlight
+            segmentsList.querySelectorAll('.segment').forEach(seg => seg.classList.remove('highlight'));
+
+            // Remove dragged element and placeholder
+            draggedSegment.style.display = 'none';
+            dropPlaceholder.style.display = 'none';
+
+            // If dropped between segments, insert the dragged segment at the target index
+            if (targetIndex !== draggingIndex) {
+                var droppedSegment = segments.splice(draggingIndex, 1)[0];
+                segments.splice(targetIndex, 0, droppedSegment);
+
+                updateSegmentsList();
+                updateCode();
+            }
+        }
+
+        function copyCode() {
+            var textArea = document.createElement("textarea");
+            textArea.value = codeElement.innerText;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+        }
+
+        document.addEventListener("keydown", (e) => {
+            if (e.keyCode == 13) {
+                add();
+                x.focus();
+            }
+        });
+
+        document.addEventListener("mousemove", (e) => {
+            // Update dragged segment position
+            draggedSegment.style.left = `${e.clientX}px`;
+            draggedSegment.style.top = `${e.clientY}px`;
+        });
+    </script>
+
+</body>
+
+</html>
