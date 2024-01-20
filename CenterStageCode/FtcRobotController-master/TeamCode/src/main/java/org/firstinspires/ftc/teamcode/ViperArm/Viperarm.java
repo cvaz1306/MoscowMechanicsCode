@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.Configs.MainConfig;
 import org.firstinspires.ftc.teamcode.Configs.MurderConfig;
 import org.firstinspires.ftc.teamcode.Configs.ViperArmConfig;
 import org.firstinspires.ftc.teamcode.MurderTest;
@@ -26,6 +27,12 @@ public class Viperarm extends RobotX {
     @Override
     public void Loop() {
         super.moveRobot();
+        if(gamepad2.right_bumper){
+            drone.setPower(MainConfig.DroneSpeed);
+        }
+        else{
+            drone.setPower(0);
+        }
         TelemetryPacket packet=new TelemetryPacket();
         packet.put("Claw Position",claw.getPosition());
         packet.put("armj1",armj1.getCurrentPosition());
@@ -36,7 +43,7 @@ public class Viperarm extends RobotX {
         }
         else claw.setPosition(ViperArmConfig.clawClosedPosition);
         randommotor.setPower(gamepad2.left_stick_y); 
-        if(gamepad2.b) armj3.setPosition(gamepad2.right_trigger-gamepad2.left_trigger);
+        armj3.setPosition(gamepad2.right_trigger-gamepad2.left_trigger);
 
         armj1.setPower(gamepad2.right_stick_y* MurderConfig.speed);
         armj2.setPower(gamepad2.right_stick_y*MurderConfig.speed*MurderConfig.speed2);

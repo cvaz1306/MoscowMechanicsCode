@@ -26,7 +26,7 @@ public class MainOpMode extends RobotX{
     @Override public void Loop(){
         if(! MainConfig.IsDrivingDisabled) super.moveRobot();
 
-        super.hookmotor.setPower(gamepad2.right_trigger-gamepad2.left_trigger);
+        super.drone.setPower(gamepad2.right_trigger-gamepad2.left_trigger);
         isBraked=!isBraked;
 
 

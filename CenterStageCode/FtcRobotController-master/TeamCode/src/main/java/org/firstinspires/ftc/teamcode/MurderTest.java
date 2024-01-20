@@ -24,7 +24,7 @@ public class MurderTest extends RobotX{
 
     @Override
     public void Loop() {
-        if(! MainConfig.IsDrivingDisabled) super.moveRobot();
+        super.moveRobot();
         //
         // super.hookmotor.setPower(gamepad2.right_stick_y);
 

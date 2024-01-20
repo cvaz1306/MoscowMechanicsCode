@@ -13,6 +13,7 @@ import java.util.ArrayList;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.sun.tools.javac.Main;
 
 public abstract class RobotX extends LinearOpMode{
 
@@ -25,7 +26,7 @@ public abstract class RobotX extends LinearOpMode{
     public DcMotor frontleft;
     public DcMotor frontright;
     public DcMotor randommotor;
-    public DcMotor hookmotor;
+    public DcMotor drone;
     public DcMotor armj1;
     public DcMotor armj2;
     public Servo armj3;
@@ -47,7 +48,7 @@ public abstract class RobotX extends LinearOpMode{
         frontleft=hardwareMap.get(DcMotor.class, "front left");
         backleft=hardwareMap.get(DcMotor.class, "back left");
         randommotor=hardwareMap.get(DcMotor.class, "notso motor");
-        hookmotor=hardwareMap.get(DcMotor.class, "hook");
+        drone =hardwareMap.get(DcMotor.class, "drone");
         armj1=hardwareMap.get(DcMotor.class, "arm j1");
         armj2=hardwareMap.get(DcMotor.class, "arm j2");
         armj3=hardwareMap.get(Servo.class,"armj3");
@@ -56,31 +57,22 @@ public abstract class RobotX extends LinearOpMode{
         //set directions for motors
         frontleft.setDirection(DcMotorSimple.Direction.REVERSE);
         backleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        backright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         initialise();
     }
     public void moveRobot(){
-        move(-((-(gamepad1.left_stick_x))*Math.abs((gamepad1.left_stick_x))* MainConfig.XSpeed), (gamepad1.left_stick_y)*Math.abs((gamepad1.left_stick_y))*MainConfig.YSpeed, (float)MurderConfig.Steeringanglemultiplier*(gamepad1.right_stick_x));
+        move(gamepad1.left_stick_x* MainConfig.XSpeed,gamepad1.left_stick_y*MainConfig.YSpeed,gamepad1.right_stick_x);
     }
-    void moveWithDirection(float x, float y, float rot){
-        move(x, y, rot);
+    public void moveWithDirection(double x, double y, double rot){
+        move(x,y,(float)rot);
     }
     private void move(double speedX, double speedY, float steeringAngle) {
-        if (gamepad1.right_bumper) {
-            // move slowly
-            frontright.setPower(((speedY + -speedX) / 2 + steeringAngle) * (1.2));
-            backright.setPower(((speedY + speedX) / 2 + steeringAngle) * (1.2));
-            frontleft.setPower((-((-speedY + -speedX) / 2) - steeringAngle) * (1.2));
-            backleft.setPower(((-speedY + speedX) / 2 + steeringAngle) * (1.2));
-        } else {
-            frontright.setPower(((speedY + -speedX) / 2 + steeringAngle) / 5);
-            backright.setPower(((speedY + speedX) / 2 + steeringAngle) / 5);
-            frontleft.setPower((-((-speedY + -speedX) / 2) - steeringAngle) / 5);
-            backleft.setPower(((-speedY + speedX) / 2 + steeringAngle) / 5);
-
-        }
+        frontright.setPower((speedY+speedX+steeringAngle)/3);
+        backright.setPower((speedY-speedX+steeringAngle)/3);
+        frontleft.setPower((speedY-speedX-steeringAngle)/3);
+        backleft.setPower((speedY+speedX-steeringAngle)/3);
     }
     @Override
     public void runOpMode(){
