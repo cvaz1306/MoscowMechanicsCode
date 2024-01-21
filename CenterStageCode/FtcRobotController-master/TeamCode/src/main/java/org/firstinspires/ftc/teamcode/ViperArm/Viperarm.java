@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.ViperArm;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Configs.MainConfig;
@@ -41,12 +43,14 @@ public class Viperarm extends RobotX {
         if(gamepad2.a){
             claw.setPosition(ViperArmConfig.clawOpenPosition);
         }
+
         else claw.setPosition(ViperArmConfig.clawClosedPosition);
-        randommotor.setPower(gamepad2.left_stick_y); 
+        randommotor.setVelocity(gamepad2.left_stick_y * ViperArmConfig.armSegment1Speed);
+
         armj3.setPosition(gamepad2.right_trigger-gamepad2.left_trigger);
 
-        armj1.setPower(gamepad2.right_stick_y* MurderConfig.speed);
-        armj2.setPower(gamepad2.right_stick_y*MurderConfig.speed*MurderConfig.speed2);
+        armj1.setVelocity(gamepad2.right_stick_y * MurderConfig.speed);
+        armj2.setVelocity(gamepad2.right_stick_y * MurderConfig.speed2);
 
 
         dashboard.sendTelemetryPacket(packet);
