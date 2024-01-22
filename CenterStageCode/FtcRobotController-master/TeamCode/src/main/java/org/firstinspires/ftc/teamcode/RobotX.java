@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.Configs.MainConfig;
-import org.firstinspires.ftc.teamcode.Configs.MurderConfig;
 import org.firstinspires.ftc.teamcode.backend.Getter;
 import org.firstinspires.ftc.teamcode.backend.ExtObj;
 
@@ -14,7 +13,7 @@ import java.util.ArrayList;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.sun.tools.javac.Main;
+import com.qualcomm.robotcore.util.RobotLog;
 
 public abstract class RobotX extends LinearOpMode{
 
@@ -33,10 +32,9 @@ public abstract class RobotX extends LinearOpMode{
     public Servo armj3;
 
 
-    private int changes;
 
-    ArrayList<ExtObj> trackedDels = new ArrayList<ExtObj>();
-    ArrayList<ExtObj> trackedDels1 = new ArrayList<ExtObj>();
+    ArrayList<ExtObj> trackedDels = new ArrayList<>();
+    ArrayList<ExtObj> trackedDels1 = new ArrayList<>();
 
     public FtcDashboard dashboard = FtcDashboard.getInstance();
 
@@ -96,7 +94,7 @@ public abstract class RobotX extends LinearOpMode{
     void changeTracker(){
         int i=0;
         for (ExtObj e: trackedDels) {
-            ExtObj f = null;
+            ExtObj f;
             try {
                 f = trackedDels1.get(i);
                 if (!e.equals(f)) {
@@ -104,7 +102,7 @@ public abstract class RobotX extends LinearOpMode{
 
                 }
             } catch (Exception g) {
-
+                RobotLog.a("exception: "+g.getMessage());
             }
             i++;
         }

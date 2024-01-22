@@ -37,6 +37,7 @@ import org.firstinspires.ftc.teamcode.Configs.CameraConfigWhite;
 import org.firstinspires.ftc.teamcode.Configs.CameraConfigYellow;
 import org.firstinspires.ftc.teamcode.ColorConverter;
 import org.firstinspires.ftc.teamcode.Configs.MainConfig;
+import org.firstinspires.ftc.teamcode.RobotX;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -52,44 +53,32 @@ import java.util.concurrent.TimeUnit;
  * by various means (e.g.: Device File Explorer in Android Studio; plugging the device into a PC and
  * using Media Transfer; ADB; etc)
  */
-@TeleOp(name="Concept: Webcam", group ="Concept")
-public class MainOpModeCamera extends LinearOpMode {
 
-    //----------------------------------------------------------------------------------------------
-    // State
-    //----------------------------------------------------------------------------------------------
+public abstract class RobotXWithCamera extends RobotX {
     FtcDashboard dashboard = FtcDashboard.getInstance();
-    private static final String TAG = "Webcam Sample";
 
-    /** How long we are to wait to be granted permission to use the camera before giving up. Here,
-     * we wait indefinitely */
+
     private static final int secondsPermissionTimeout = Integer.MAX_VALUE;
 
-    /** State regarding our interaction with the camera */
+
     private CameraManager cameraManager;
     private WebcamName cameraName;
     private Camera camera;
     private CameraCaptureSession cameraCaptureSession;
 
-    /** The queue into which all frames from the camera are placed as they become available.
-     * Frames which are not processed by the OpMode are automatically discarded. */
+
     private EvictingBlockingQueue<Bitmap> frameQueue;
 
-    /** State regarding where and how to save frames when the 'A' button is pressed. */
+
     private int captureCounter = 0;
     private File captureDirectory = AppUtil.ROBOT_DATA_DIR;
 
-    /** A utility object that indicates where the asynchronous callbacks from the camera
-     * infrastructure are to run. In this OpMode, that's all hidden from you (but see {@link #startCamera}
-     * if you're curious): no knowledge of multi-threading is needed here. */
     private Handler callbackHandler;
+    boolean buttonPressSeen = false;
+    boolean captureWhenAvailable = false;
 
-    //----------------------------------------------------------------------------------------------
-    // Main OpMode entry
-    //----------------------------------------------------------------------------------------------
-
-    @Override public void runOpMode() {
-
+    @Override
+    public void initialise() {
         callbackHandler = CallbackLooper.getDefault().getHandler();
 
         cameraManager = ClassFactory.getInstance().getCameraManager();
@@ -107,166 +96,50 @@ public class MainOpModeCamera extends LinearOpMode {
 
             telemetry.addData(">", "Press Play to start");
             telemetry.update();
-            waitForStart();
-            telemetry.clear();
-            telemetry.addData(">", "Started...Press 'A' to capture frame");
 
-            boolean buttonPressSeen = false;
-            boolean captureWhenAvailable = false;
-            while (opModeIsActive()) {
 
-                boolean buttonIsPressed = gamepad1.a;//true;//
-                if (buttonIsPressed && !buttonPressSeen) {//){
-                    captureWhenAvailable = true;
-                }
-                buttonPressSeen = buttonIsPressed;
-
-                if (captureWhenAvailable) {
-                    Bitmap bmp = frameQueue.poll();
-                    if (bmp != null) {
-                        captureWhenAvailable = false;
-                        onNewFrame(bmp);
-                    }
-                }
-
-                telemetry.update();
-            }
         } finally {
-            closeCamera();
+
         }
     }
 
+    @Override
+    public void Start() {
+        telemetry.clear();
+        telemetry.addData(">", "Started...Press 'A' to capture frame");
 
+        boolean buttonPressSeen = false;
+        boolean captureWhenAvailable = false;
+    }
 
+    @Override
+    public void Loop() {
+        boolean buttonIsPressed = gamepad1.a;
+        if (buttonIsPressed && !buttonPressSeen) {
+            captureWhenAvailable = true;
+        }
+        buttonPressSeen = buttonIsPressed;
 
-    /** Do something with the frame */
-    private void onNewFrame(Bitmap frame) {
-
-        int red = 0;
-        int green = 0;
-        int blue = 0;
-        float cyan=0, yellow=0, magenta=0, key=0;
-        int alpha = 0;
-        int posX=0;
-        int posY=0;
-        float a=0;
-        float b=0;
-        float c=0;
-        int jkldfghjkl=0;
-        a= ColorConverter.rgbToHsv(frame.getPixel(frame.getWidth()/2, frame.getHeight()/2))[0];
-        b=ColorConverter.rgbToHsv(frame.getPixel(frame.getWidth()/2, frame.getHeight()/2))[1];
-        c=ColorConverter.rgbToHsv(frame.getPixel(frame.getWidth()/2, frame.getHeight()/2))[0];
-
-        int ApixelColor = frame.getPixel(frame.getWidth()/2, frame.getHeight()/2);
-        red = Color.red(ApixelColor);
-        green = Color.green(ApixelColor);
-        blue = Color.blue(ApixelColor);
-        alpha = Color.alpha(ApixelColor);
-        float[] cmyk=ColorConverter.rgbToCmyk(red, green, blue);
-        cyan=cmyk[0];
-        magenta=cmyk[1];
-        yellow=cmyk[2];
-        key=cmyk[3];
-        telemetry.addData("Cyan", cyan);
-        telemetry.addData("Magenta", magenta);
-        telemetry.addData("Yellow", yellow);
-        telemetry.addData("Key", key);
-
-        for(int i1=0; i1<frame.getWidth(); i1=i1+10){
-            for(int i2=0; i2<frame.getHeight(); i2=i2+10){
-                int pixelColor = frame.getPixel(i1, i2);
-                red = Color.red(pixelColor);
-                green = Color.green(pixelColor);
-                blue = Color.blue(pixelColor);
-                alpha = Color.alpha(pixelColor);
-                float[] color=ColorConverter.rgbToHsv(frame.getPixel(i1, i2));
-                float[] cmykA=ColorConverter.rgbToCmyk(red, green, blue);
-                cyan=cmykA[0];
-                magenta=cmykA[1];
-                yellow=cmykA[2];
-                key=cmykA[3];
-
-                float hue=color[0];
-                float saturation=color[1];
-                float value=color[2];
-                if(green + CameraConfigGreen.minGreen >red&&green+ CameraConfigGreen.minGreen>blue){//(red<100&&green>100&&blue<100)||(red<150&&green>150&&blue<150)){
-                    posX= posX==0 ? i1:(i1+posX)/2;
-                    posY= posY==0 ? i2:(i2+posY)/2;
-                    frame.setPixel(Math.max(0,i1), Math.max(0, i2), Color.GREEN);
-                    jkldfghjkl++;
-                }
-                else if(yellow + CameraConfigYellow.minYellow >=Math.max(magenta, cyan)&&value>.5&&saturation>.4){//(red<100&&green>100&&blue<100)||(red<150&&green>150&&blue<150)){.
-                    posX= posX==0 ? i1:(i1+posX)/2;
-                    posY= posY==0 ? i2:(i2+posY)/2;
-                    frame.setPixel(Math.max(0,i1), Math.max(0, i2), Color.YELLOW);
-                    jkldfghjkl++;
-                }
-                else if(magenta+ CameraConfigPurple.minMagenta >=Math.max(yellow, cyan)&&saturation>CameraConfigPurple.minSaturation){//(red<100&&green>100&&blue<100)||(red<150&&green>150&&blue<150)){.
-                    posX= posX==0 ? i1:(i1+posX)/2;
-                    posY= posY==0 ? i2:(i2+posY)/2;
-                    frame.setPixel(Math.max(0,i1), Math.max(0, i2), Color.MAGENTA);
-                    jkldfghjkl++;
-                }
-                else if(saturation<CameraConfigWhite.maxSaturation &&value>.8){
-                    posX= posX==0 ? i1:(i1+posX)/2;
-                    posY= posY==0 ? i2:(i2+posY)/2;
-                    frame.setPixel(Math.max(0,i1), Math.max(0, i2), Color.WHITE);
-                    jkldfghjkl++;
-                }
-
-//                if((hue>=230 || hue<=10)&&saturation>.1f&&value<.76f*256){//purple
-//                    posX= posX==0 ? i1:(i1+posX)/2;
-//                    posY= posY==0 ? i2:(i2+posY)/2;
-//                    frame.setPixel(Math.max(0,i1), Math.max(0, i2), Color.CYAN);++
-//                    jkldfghjkl++;
-//                }
-//                else if((hue>=20 && hue<=70)/*&&saturation>.1f*/&&value>.3f*256){//GREEN?
-//                    posX= posX==0 ? i1:(i1+posX)/2;
-//                    posY= posY==0 ? i2:(i2+posY)/2;
-//                    frame.setPixel(Math.max(0,i1), Math.max(0, i2), Color.GREEN);
-//                    jkldfghjkl++;
-//                }
-//                else if((saturation<.9f&&value<.9f*256)){//purple?
-//                    posX= posX==0 ? i1:(i1+posX)/2;
-//                    posY= posY==0 ? i2:(i2+posY)/2;
-//                    frame.setPixel(Math.max(0,i1), Math.max(0, i2), Color.RED);
-//                    jkldfghjkl++;
-//                }
-
+        if (captureWhenAvailable) {
+            Bitmap bmp = frameQueue.poll();
+            if (bmp != null) {
+                captureWhenAvailable = false;
+                LoopX(bmp);
+                bmp.recycle();
             }
         }
 
-        telemetry.addData("Hue", a);
-        telemetry.addData("Saturation", b);
-        telemetry.addData("Value", c);
-
-        telemetry.addData("POSITION", "("+posX+", "+posY+")");
-        //telemetry.addData("jkndrhkl", jkldfghjkl);
-        frame.setPixel(posX, posY, Color.BLUE);
-        if( MainConfig.DoWeSave) saveBitmap(frame);
-        frame.recycle(); // not strictly necessary, but helpful
-        TelemetryPacket packet = new TelemetryPacket();
-        packet.put("x", 3.7);
-        packet.put("Position X", posX);
-        packet.put("Position Y", posY);
-        packet.fieldOverlay()
-                .setFill("blue")
-                .fillRect(-20, -20, 40, 40);
-        packet.addLine(String.format(Locale.getDefault(), "Took %d images;", captureCounter+1));
-        dashboard.sendTelemetryPacket(packet);
+        telemetry.update();
     }
-
-    //----------------------------------------------------------------------------------------------
-    // Camera operations
-    //----------------------------------------------------------------------------------------------
-
+    public abstract void LoopX(Bitmap x);
     private void initializeFrameQueue(int capacity) {
         /** The frame queue will automatically throw away bitmap frames if they are not processed
          * quickly by the OpMode. This avoids a buildup of frames in memory */
         frameQueue = new EvictingBlockingQueue<Bitmap>(new ArrayBlockingQueue<Bitmap>(capacity));
         frameQueue.setEvictAction(new Consumer<Bitmap>() {
-            @Override public void accept(Bitmap frame) {
-                // RobotLog.ii(TAG, "frame recycled w/o processing");
+            @Override
+            public void accept(Bitmap frame) {
+                // RobotLog.ii("Webcam", "frame recycled w/o processing");
 
                 frame.recycle(); // not strictly necessary, but helpful
             }
@@ -306,13 +179,15 @@ public class MainOpModeCamera extends LinearOpMode {
         try {
             /** Create a session in which requests to capture frames can be made */
             camera.createCaptureSession(Continuation.create(callbackHandler, new CameraCaptureSession.StateCallbackDefault() {
-                @Override public void onConfigured(@NonNull CameraCaptureSession session) {
+                @Override
+                public void onConfigured(@NonNull CameraCaptureSession session) {
                     try {
                         /** The session is ready to go. Start requesting frames */
                         final CameraCaptureRequest captureRequest = camera.createCaptureRequest(imageFormat, size, fps);
                         session.startCapture(captureRequest,
                                 new CameraCaptureSession.CaptureCallback() {
-                                    @Override public void onNewFrame(@NonNull CameraCaptureSession session, @NonNull CameraCaptureRequest request, @NonNull CameraFrame cameraFrame) {
+                                    @Override
+                                    public void onNewFrame(@NonNull CameraCaptureSession session, @NonNull CameraCaptureRequest request, @NonNull CameraFrame cameraFrame) {
                                         /** A new frame is available. The frame data has <em>not</em> been copied for us, and we can only access it
                                          * for the duration of the callback. So we copy here manually. */
                                         Bitmap bmp = captureRequest.createEmptyBitmap();
@@ -321,22 +196,23 @@ public class MainOpModeCamera extends LinearOpMode {
                                     }
                                 },
                                 Continuation.create(callbackHandler, new CameraCaptureSession.StatusCallback() {
-                                    @Override public void onCaptureSequenceCompleted(@NonNull CameraCaptureSession session, CameraCaptureSequenceId cameraCaptureSequenceId, long lastFrameNumber) {
-                                        RobotLog.ii(TAG, "capture sequence %s reports completed: lastFrame=%d", cameraCaptureSequenceId, lastFrameNumber);
+                                    @Override
+                                    public void onCaptureSequenceCompleted(@NonNull CameraCaptureSession session, CameraCaptureSequenceId cameraCaptureSequenceId, long lastFrameNumber) {
+                                        RobotLog.ii("Webcam", "capture sequence %s reports completed: lastFrame=%d", cameraCaptureSequenceId, lastFrameNumber);
                                     }
                                 })
                         );
                         synchronizer.finish(session);
-                    } catch (CameraException|RuntimeException e) {
-                        RobotLog.ee(TAG, e, "exception starting capture");
+                    } catch (CameraException | RuntimeException e) {
+                        RobotLog.ee("Webcam", e, "exception starting capture");
                         error("exception starting capture");
                         session.close();
                         synchronizer.finish(null);
                     }
                 }
             }));
-        } catch (CameraException|RuntimeException e) {
-            RobotLog.ee(TAG, e, "exception starting camera");
+        } catch (CameraException | RuntimeException e) {
+            RobotLog.ee("Webcam", e, "exception starting camera");
             error("exception starting camera");
             synchronizer.finish(null);
         }
@@ -376,7 +252,8 @@ public class MainOpModeCamera extends LinearOpMode {
         telemetry.log().add(msg);
         telemetry.update();
     }
-    private void error(String format, Object...args) {
+
+    private void error(String format, Object... args) {
         telemetry.log().add(format, args);
         telemetry.update();
     }
@@ -396,7 +273,7 @@ public class MainOpModeCamera extends LinearOpMode {
                 telemetry.log().add("captured %s", file.getName());
             }
         } catch (IOException e) {
-            RobotLog.ee(TAG, e, "exception in saveBitmap()");
+            RobotLog.ee("Webcam", e, "exception in saveBitmap()");
             error("exception saving %s", file.getName());
         }
     }
