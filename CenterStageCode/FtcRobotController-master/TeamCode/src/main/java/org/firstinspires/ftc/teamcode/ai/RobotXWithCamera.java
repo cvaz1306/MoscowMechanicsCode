@@ -1,16 +1,12 @@
 package org.firstinspires.ftc.teamcode.ai;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.ImageFormat;
 import android.os.Handler;
 
 import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -31,12 +27,6 @@ import org.firstinspires.ftc.robotcore.internal.network.CallbackLooper;
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.firstinspires.ftc.robotcore.internal.system.ContinuationSynchronizer;
 import org.firstinspires.ftc.robotcore.internal.system.Deadline;
-import org.firstinspires.ftc.teamcode.Configs.CameraConfigGreen;
-import org.firstinspires.ftc.teamcode.Configs.CameraConfigPurple;
-import org.firstinspires.ftc.teamcode.Configs.CameraConfigWhite;
-import org.firstinspires.ftc.teamcode.Configs.CameraConfigYellow;
-import org.firstinspires.ftc.teamcode.ColorConverter;
-import org.firstinspires.ftc.teamcode.Configs.MainConfig;
 import org.firstinspires.ftc.teamcode.RobotX;
 
 import java.io.File;
@@ -55,7 +45,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 public abstract class RobotXWithCamera extends RobotX {
-    FtcDashboard dashboard = FtcDashboard.getInstance();
+    public FtcDashboard dashboard = FtcDashboard.getInstance();
 
 
     private static final int secondsPermissionTimeout = Integer.MAX_VALUE;
@@ -99,10 +89,10 @@ public abstract class RobotXWithCamera extends RobotX {
 
 
         } finally {
-
+            initialiseX();
         }
     }
-
+    public abstract void initialiseX();
     @Override
     public void Start() {
         telemetry.clear();
@@ -110,8 +100,9 @@ public abstract class RobotXWithCamera extends RobotX {
 
         boolean buttonPressSeen = false;
         boolean captureWhenAvailable = false;
+        startX();
     }
-
+    public abstract void startX();
     @Override
     public void Loop() {
         boolean buttonIsPressed = gamepad1.a;
@@ -265,8 +256,8 @@ public abstract class RobotXWithCamera extends RobotX {
         return false;
     }
 
-    private void saveBitmap(Bitmap bitmap) {
-        File file = new File(captureDirectory, String.format(Locale.getDefault(), "webcam-frame-%d.jpg", captureCounter++));
+    public void saveBitmap(Bitmap bitmap,String name) {
+        File file = new File(captureDirectory, String.format(Locale.getDefault(), name, captureCounter++));
         try {
             try (FileOutputStream outputStream = new FileOutputStream(file)) {
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
