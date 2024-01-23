@@ -19,12 +19,12 @@ public abstract class RobotX extends LinearOpMode{
 
 
 
-    public  DcMotorEx backleft;
-    public DcMotorEx backright;
+    public  DcMotor backleft;
+    public DcMotor backright;
     public CRServo camservo;
     public Servo claw;
-    public DcMotorEx frontleft;
-    public DcMotorEx frontright;
+    public DcMotor frontleft;
+    public DcMotor frontright;
     public DcMotorEx randommotor;
     public DcMotorEx drone;
     public DcMotorEx armj1;
@@ -42,14 +42,16 @@ public abstract class RobotX extends LinearOpMode{
 
     public void Init(){
         //init motors
-        frontright=hardwareMap.get(DcMotorEx.class, "front right");
-        backright=hardwareMap.get(DcMotorEx.class, "back right");
-        frontleft=hardwareMap.get(DcMotorEx.class, "front left");
-        backleft=hardwareMap.get(DcMotorEx.class, "back left");
+        frontright=hardwareMap.get(DcMotor.class, "front right");
+        backright=hardwareMap.get(DcMotor.class, "back right");
+        frontleft=hardwareMap.get(DcMotor.class, "front left");
+        backleft=hardwareMap.get(DcMotor.class, "back left");
         randommotor=hardwareMap.get(DcMotorEx.class, "notso motor");
         drone =hardwareMap.get(DcMotorEx.class, "drone");
         armj1=hardwareMap.get(DcMotorEx.class, "arm j1");
         armj2=hardwareMap.get(DcMotorEx.class, "arm j2");
+        armj1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        armj2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         armj3=hardwareMap.get(Servo.class,"armj3");
         camservo = hardwareMap.get(CRServo.class, "cam servo");
         claw=hardwareMap.get(Servo.class,"claw");
@@ -59,6 +61,7 @@ public abstract class RobotX extends LinearOpMode{
         backright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        randommotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         initialise();
     }
     public void moveRobot(){
@@ -68,10 +71,10 @@ public abstract class RobotX extends LinearOpMode{
         move(x,y,(float)rot);
     }
     private void move(double speedX, double speedY, float steeringAngle) {
-        frontright.setVelocity((speedY+speedX+steeringAngle)/3);
-        backright.setVelocity((speedY-speedX+steeringAngle)/3);
-        frontleft.setVelocity((speedY-speedX-steeringAngle)/3);
-        backleft.setVelocity((speedY+speedX-steeringAngle)/3);
+        frontright.setPower((speedY+speedX+steeringAngle)/3);
+        backright.setPower((speedY-speedX+steeringAngle)/3);
+        frontleft.setPower((speedY-speedX-steeringAngle)/3);
+        backleft.setPower((speedY+speedX-steeringAngle)/3);
     }
     @Override
     public void runOpMode(){

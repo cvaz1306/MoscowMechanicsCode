@@ -46,12 +46,14 @@ public class Viperarm extends RobotX {
 
         else claw.setPosition(ViperArmConfig.clawClosedPosition);
         randommotor.setVelocity(gamepad2.left_stick_y * ViperArmConfig.armSegment1Speed);
-
+        randommotor.setPower(ViperArmConfig.getArmSegment1Power);
         armj3.setPosition(gamepad2.right_trigger-gamepad2.left_trigger);
 
         armj1.setVelocity(gamepad2.right_stick_y * MurderConfig.speed);
         armj2.setVelocity(gamepad2.right_stick_y * MurderConfig.speed2);
 
+        packet.put("Armj1Power",armj1.getVelocity());
+        packet.put("Armj2Power",armj2.getVelocity());
 
         dashboard.sendTelemetryPacket(packet);
     }

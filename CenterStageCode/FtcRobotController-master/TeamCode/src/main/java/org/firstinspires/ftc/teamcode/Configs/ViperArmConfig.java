@@ -10,5 +10,5 @@ public class ViperArmConfig {
     public static double targetPosition, armj3TargetPosition;
     public static double clawOpenPosition = 0.02, clawClosedPosition = 0.2;
     public static int armj1offset = 0, armj2offset = 0;
-    public static double armSegment1Speed;
+    public static double armSegment1Speed=500,getArmSegment1Power;
 }
