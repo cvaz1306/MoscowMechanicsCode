@@ -29,7 +29,7 @@ public class Viperarm extends RobotX {
     @Override
     public void Loop() {
         super.moveRobot();
-        if(gamepad2.right_bumper){
+        if(gamepad2.right_bumper&&getRuntime()>ViperArmConfig.droneDelay){
             drone.setPower(MainConfig.DroneSpeed);
         }
         else{
