@@ -22,7 +22,7 @@ import java.util.List;
 @TeleOp(name = "RXCAMTest")
 public class RXCAMTest extends RobotXWithCamera {
 
-public static double minWidth=25, minHeight=25;
+public static double PosMultiplier=25;
     @Override
     public void initialiseX() {
 
@@ -79,6 +79,8 @@ public static double minWidth=25, minHeight=25;
             double posy=circlePositions.get(0).y;
             packet.put("X", posx);
             packet.put("Y", posy);
+            packet.fieldOverlay()
+                    .fillCircle(posx*PosMultiplier,posy*PosMultiplier,25);
             RobotLog.a("Pixel Detected: ("+posx+", "+posy+")");
         }
         dashboard.sendImage(x);
