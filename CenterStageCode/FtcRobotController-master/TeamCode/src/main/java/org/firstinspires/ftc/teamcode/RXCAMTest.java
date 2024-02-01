@@ -83,7 +83,7 @@ public static double PosMultiplier=25;
                     .fillCircle(posx*PosMultiplier,posy*PosMultiplier,25);
             RobotLog.a("Pixel Detected: ("+posx+", "+posy+")");
         }
-        dashboard.sendImage(x);
+
         dashboard.sendTelemetryPacket(packet);
     }
 
