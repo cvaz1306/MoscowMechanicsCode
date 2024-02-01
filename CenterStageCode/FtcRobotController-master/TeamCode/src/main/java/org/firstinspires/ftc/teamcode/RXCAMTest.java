@@ -2,8 +2,11 @@ package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Bitmap;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.qualcomm.ftccommon.FtcEventLoopIdle;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.ai.RobotXWithCamera;
 import org.opencv.android.Utils;
@@ -15,8 +18,11 @@ import org.opencv.imgproc.Imgproc;
 
 import java.util.ArrayList;
 import java.util.List;
+@Config
 @TeleOp(name = "RXCAMTest")
 public class RXCAMTest extends RobotXWithCamera {
+
+public static double minWidth=25, minHeight=25;
     @Override
     public void initialiseX() {
 
@@ -67,10 +73,16 @@ public class RXCAMTest extends RobotXWithCamera {
             saveBitmap(x,"recent.jpg");
         }
         TelemetryPacket packet=new TelemetryPacket();
+
         if(!circlePositions.isEmpty()){
-            packet.put("X", circlePositions.get(0).x);
-            packet.put("Y", circlePositions.get(0).y);
+            double posx=circlePositions.get(0).x;
+            double posy=circlePositions.get(0).y;
+            packet.put("X", posx);
+            packet.put("Y", posy);
+            RobotLog.a("Pixel Detected: ("+posx+", "+posy+")");
         }
+        dashboard.sendImage(x);
+        dashboard.sendTelemetryPacket(packet);
     }
 
     private Point[] getHexagon() {

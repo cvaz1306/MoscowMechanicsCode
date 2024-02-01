@@ -30,6 +30,7 @@ public abstract class RobotX extends LinearOpMode{
     public DcMotorEx armj1;
     public DcMotorEx armj2;
     public Servo armj3;
+    public Servo armj4;
 
 
 
@@ -53,6 +54,7 @@ public abstract class RobotX extends LinearOpMode{
         armj1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         armj2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         armj3=hardwareMap.get(Servo.class,"armj3");
+        armj4=hardwareMap.get(Servo.class,"armj4");
         camservo = hardwareMap.get(CRServo.class, "cam servo");
         claw=hardwareMap.get(Servo.class,"claw");
         //set directions for motors

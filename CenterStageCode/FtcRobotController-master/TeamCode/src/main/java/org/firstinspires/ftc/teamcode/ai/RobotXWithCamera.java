@@ -105,7 +105,7 @@ public abstract class RobotXWithCamera extends RobotX {
     public abstract void startX();
     @Override
     public void Loop() {
-        boolean buttonIsPressed = true;
+        boolean buttonIsPressed = gamepad1.a;
         if (buttonIsPressed && !buttonPressSeen) {
             captureWhenAvailable = true;
         }
