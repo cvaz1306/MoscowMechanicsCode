@@ -19,6 +19,7 @@ public class Viperarm extends RobotX {
     public void initialise() {
         armj1Offset=-ViperArmConfig.armj1offset;
         armj2Offset=armj2.getCurrentPosition();
+        armj4.setDirection(Servo.Direction.REVERSE);
     }
 
     @Override
@@ -45,15 +46,14 @@ public class Viperarm extends RobotX {
         }
 
         else claw.setPosition(ViperArmConfig.clawClosedPosition);
-        randommotor.setVelocity(gamepad2.left_stick_y * ViperArmConfig.armSegment1Speed);
-        randommotor.setPower(ViperArmConfig.getArmSegment1Power);
+        //randommotor.setVelocity(gamepad2.left_stick_y * ViperArmConfig.armSegment1Speed);
+        randommotor.setPower(gamepad2.left_stick_y * ViperArmConfig.armSegment1Speed);
         armj3.setPosition(gamepad2.right_trigger-gamepad2.left_trigger);
-
+        armj4.setPosition((gamepad2.right_trigger-gamepad2.left_trigger));
         armj1.setVelocity(gamepad2.right_stick_y * MurderConfig.speed);
         armj2.setVelocity(gamepad2.right_stick_y * MurderConfig.speed2);
 
-        packet.put("Armj1Power",armj1.getVelocity());
-        packet.put("Armj2Power",armj2.getVelocity());
+        packet.put("ARM POS",randommotor.getCurrentPosition());
 
         dashboard.sendTelemetryPacket(packet);
     }

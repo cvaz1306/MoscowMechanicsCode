@@ -20,23 +20,6 @@ public class ChangeTracker extends RobotX {
 
     @Override
     public void Loop() {
-        track(new Getter() {
-            @Override
-            public Object value() {
-                return gamepad1.a;
-            }
 
-            @Override
-            public String name() {
-                return "gamepad a";
-            }
-
-            @Override
-            public void onChanged(Object value) {
-                i=i+1;
-                telemetry.addData("A",i);
-                telemetry.update();
-            }
-        });
     }
 }

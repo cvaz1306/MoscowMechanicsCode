@@ -18,6 +18,6 @@ public class Servos extends RobotX {
     @Override
     public void Loop() {
         armj3.setPosition(0);
-        armj4.setPosition(0);
+        armj4.setPosition(180);
     }
 }
