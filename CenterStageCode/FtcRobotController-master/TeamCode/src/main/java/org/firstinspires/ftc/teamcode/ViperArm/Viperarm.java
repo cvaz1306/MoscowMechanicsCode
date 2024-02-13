@@ -46,14 +46,26 @@ public class Viperarm extends RobotX {
         }
 
         else claw.setPosition(ViperArmConfig.clawClosedPosition);
-        //randommotor.setVelocity(gamepad2.left_stick_y * ViperArmConfig.armSegment1Speed);
-        randommotor.setPower(gamepad2.left_stick_y * ViperArmConfig.armSegment1Speed);
+
+        if(Math.abs(randommotor.getVelocity())>300){
+            randommotor.setPower(randommotor.getPower()+((randommotor.getVelocity()/Math.abs(randommotor.getVelocity()))/16));
+        }
+        else {
+            if(gamepad2.left_stick_y!=0) {
+                randommotor.setPower(gamepad2.left_stick_y);
+            }
+            else{
+                randommotor.setPower((randommotor.getVelocity()/Math.abs(randommotor.getVelocity()))/-16);
+            }
+        }
+
+        //randommotor.setPower(ViperArmConfig.getArmSegment1Power);
         armj3.setPosition(gamepad2.right_trigger-gamepad2.left_trigger);
         armj4.setPosition((gamepad2.right_trigger-gamepad2.left_trigger));
         armj1.setVelocity(gamepad2.right_stick_y * MurderConfig.speed);
         armj2.setVelocity(gamepad2.right_stick_y * MurderConfig.speed2);
 
-        packet.put("ARM POS",randommotor.getCurrentPosition());
+        packet.put("ARM POS",randommotor.getVelocity());
 
         dashboard.sendTelemetryPacket(packet);
     }

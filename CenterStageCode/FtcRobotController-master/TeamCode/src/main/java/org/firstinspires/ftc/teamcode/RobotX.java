@@ -25,7 +25,7 @@ public abstract class RobotX extends LinearOpMode{
     public Servo claw;
     public DcMotor frontleft;
     public DcMotor frontright;
-    public DcMotor randommotor;
+    public DcMotorEx randommotor;
     public DcMotorEx drone;
     public DcMotorEx armj1;
     public DcMotorEx armj2;
@@ -40,7 +40,7 @@ public abstract class RobotX extends LinearOpMode{
         backright=hardwareMap.get(DcMotor.class, "back right");
         frontleft=hardwareMap.get(DcMotor.class, "front left");
         backleft=hardwareMap.get(DcMotor.class, "back left");
-        randommotor=hardwareMap.get(DcMotor.class, "notso motor");
+        randommotor=hardwareMap.get(DcMotorEx.class, "notso motor");
         drone =hardwareMap.get(DcMotorEx.class, "drone");
         armj1=hardwareMap.get(DcMotorEx.class, "arm j1");
         armj2=hardwareMap.get(DcMotorEx.class, "arm j2");
@@ -56,6 +56,7 @@ public abstract class RobotX extends LinearOpMode{
         backright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        randommotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         initialise();
     }
     public void moveRobot(){
