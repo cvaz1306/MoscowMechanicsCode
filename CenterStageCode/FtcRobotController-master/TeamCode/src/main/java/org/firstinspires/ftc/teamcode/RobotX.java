@@ -33,7 +33,9 @@ public abstract class RobotX extends LinearOpMode{
     public Servo armj4;
 
     public FtcDashboard dashboard = FtcDashboard.getInstance();
-
+    protected double ActivationFunction(float x){
+        return x*Math.abs(Math.pow(x,2));
+    }
     public void Init(){
         //init motors
         frontright=hardwareMap.get(DcMotor.class, "front right");
@@ -60,7 +62,7 @@ public abstract class RobotX extends LinearOpMode{
         initialise();
     }
     public void moveRobot(){
-        move(gamepad1.left_stick_x* MainConfig.XSpeed,gamepad1.left_stick_y*MainConfig.YSpeed,gamepad1.right_stick_x);
+        move(ActivationFunction(gamepad1.left_stick_x)* MainConfig.XSpeed,ActivationFunction(gamepad1.left_stick_y)*MainConfig.YSpeed,(float)ActivationFunction((gamepad1.right_stick_x)));
     }
     public void moveWithDirection(double x, double y, double rot){
         move(x,y,(float)rot);

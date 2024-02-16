@@ -13,4 +13,5 @@ public class ViperArmConfig {
     public static double armSegment1Speed=300,getArmSegment1Power;
     public static int droneDelay=130000;
     public static double speed=.01;
+    public static int TicksPerRevolution=720;
 }
